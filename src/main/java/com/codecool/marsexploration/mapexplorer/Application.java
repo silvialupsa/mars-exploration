@@ -18,6 +18,7 @@ import com.codecool.marsexploration.mapexplorer.simulation.SimulationContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +27,7 @@ public class Application {
     private static final String workDir = "src/main";
 
     public static void main(String[] args) {
-        Logger consoleLogger  = new ConsoleLogger();
+        Logger consoleLogger = new ConsoleLogger();
         consoleLogger.logInfo("Legend:");
         consoleLogger.logInfo("Rover-\uD83D\uDE97");
         consoleLogger.logInfo("Spaceship-\uD83D\uDE80");
@@ -48,12 +49,21 @@ public class Application {
             Configuration mapConfiguration = new Configuration(mapFile, landingSpot, List.of("#", "&", "*", "%"), 30);
             if (configurationValidator.checkLandingSpots(landingSpot, mapConfiguration)) {
                 InitializeRover initializeRover = new InitializeRover();
-                MarsRover rover = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
-                SimulationContext simulationContext = new SimulationContext(0, 60, rover, landingSpot, mapFile, resources);
+                MarsRover rover1 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
+                MarsRover rover2 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
+                MarsRover rover3 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
+
+                List<MarsRover> rovers = List.of(rover1, rover2, rover3);
+
+
+                SimulationContext simulationContext = new SimulationContext(0, 60, rovers, landingSpot, mapFile, resources);
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
-                resourcesDatabase.add(simulationContext.getRover().getNamed(), simulationContext.getNumberOfSteps(), simulationContext.getNumberOfResources(), simulationContext.getExplorationOutcome().toString());
+//                for (MarsRover rover : rovers) {
+           //         resourcesDatabase.add(rovers.getNamed(), simulationContext.getNumberOfSteps(), simulationContext.getNumberOfResources(), simulationContext.getExplorationOutcome().toString());
+
+//                }
                 consoleLogger.logInfo("File ResultsAfterExploration-" + i + ".map successful created.");
             } else {
                 consoleLogger.logError("Invalid landing Spot for spaceship-" + i);
