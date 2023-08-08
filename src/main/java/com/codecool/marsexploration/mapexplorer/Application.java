@@ -58,6 +58,7 @@ public class Application {
             } else {
                 consoleLogger.logError("Invalid landing Spot for spaceship-" + i);
             }
+            System.out.println();
         }
 
     }
