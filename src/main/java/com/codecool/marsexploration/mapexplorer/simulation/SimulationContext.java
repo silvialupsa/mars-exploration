@@ -76,18 +76,6 @@ public class SimulationContext {
         this.numberOfSteps = numberOfSteps;
     }
 
-    public void setTimeoutSteps(int timeoutSteps) {
-        this.timeoutSteps = timeoutSteps;
-    }
-
-    public void setRover(MarsRover rover) {
-        this.rover = rover;
-    }
-
-    public void setSpaceshipLocation(Coordinate spaceshipLocation) {
-        this.spaceshipLocation = spaceshipLocation;
-    }
-
     public void setMap(String map) {
         this.map = map;
     }
