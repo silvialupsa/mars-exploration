@@ -11,7 +11,7 @@ import java.util.Map;
 public class SimulationContext {
     private int numberOfSteps;
     private int timeoutSteps;
-    private MarsRover rover;
+    private List<MarsRover> rovers;
     private Coordinate spaceshipLocation;
     private String map;
     private  HashMap<String, List<Coordinate>>monitoredResources;
@@ -19,12 +19,12 @@ public class SimulationContext {
 
 
     // Constructor
-    public SimulationContext(int numberOfSteps, int timeoutSteps, MarsRover rover,
+    public SimulationContext(int numberOfSteps, int timeoutSteps, List<MarsRover> rovers,
                              Coordinate spaceshipLocation, String map,
                              HashMap<String, List<Coordinate>> monitoredResources) {
         this.numberOfSteps = numberOfSteps;
         this.timeoutSteps = timeoutSteps;
-        this.rover = rover;
+        this.rovers = rovers;
         this.spaceshipLocation = spaceshipLocation;
         this.map = map;
         this.monitoredResources = monitoredResources;
@@ -48,8 +48,8 @@ public class SimulationContext {
         return timeoutSteps;
     }
 
-    public MarsRover getRover() {
-        return rover;
+    public List <MarsRover> getRover() {
+        return rovers;
     }
 
     public Coordinate getSpaceshipLocation() {
