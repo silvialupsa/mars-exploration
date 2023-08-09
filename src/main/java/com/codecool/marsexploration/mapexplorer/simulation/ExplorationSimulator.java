@@ -30,6 +30,7 @@ public class ExplorationSimulator {
     }
 
     public void startExploring() {
+
         fileLogger.clearLogFile();
         Map<MarsRover, List<Coordinate>> visitedCoordinate = new HashMap<>();
         Random random = new Random();
@@ -46,8 +47,11 @@ public class ExplorationSimulator {
                     }
                     rover.setCurrentPosition(newRandomRoverPosition);
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
+
                 }
             }
+//            isOutcomeReached(simulationContext, configuration);
+//            System.out.println("outcome " + simulationContext.getExplorationOutcome() + " rover " + simulationContext.getRover().get(indexOfRover).getNamed());
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
         }
         configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
@@ -77,6 +81,12 @@ public class ExplorationSimulator {
         }
         return resourcesMap;
     }
+
+    private boolean isOutcomeReached(SimulationContext context, Configuration configuration) {
+        return analyzers.stream()
+                .anyMatch(analyzer -> analyzer.hasReachedOutcome(context, configuration));
+    }
+
 }
 
 
@@ -126,10 +136,6 @@ public class ExplorationSimulator {
 //            rover.setCurrentPosition(simulationContext.getSpaceshipLocation());
 //
 //        }
-
-
-
-
 
 
 //REFACTOR
