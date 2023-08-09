@@ -23,6 +23,10 @@ public class MarsRover {
         return resources;
     }
 
+    public void setResources(HashMap<String, List<Coordinate>> resources) {
+        this.resources.putAll(resources);
+    }
+
     public int getId() {
         return id;
     }

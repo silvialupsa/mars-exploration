@@ -14,14 +14,14 @@ public class SimulationContext {
     private List<MarsRover> rovers;
     private Coordinate spaceshipLocation;
     private String map;
-    private  HashMap<String, List<Coordinate>>monitoredResources;
-    private ExplorationOutcome explorationOutcome;
+    private Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources;
+    private Map<MarsRover, ExplorationOutcome> explorationOutcome = new HashMap<>();
 
 
     // Constructor
     public SimulationContext(int numberOfSteps, int timeoutSteps, List<MarsRover> rovers,
                              Coordinate spaceshipLocation, String map,
-                             HashMap<String, List<Coordinate>> monitoredResources) {
+                             Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources) {
         this.numberOfSteps = numberOfSteps;
         this.timeoutSteps = timeoutSteps;
         this.rovers = rovers;
@@ -32,12 +32,13 @@ public class SimulationContext {
 
     // Getters and Setters (You can generate them automatically in most IDEs)
 
-    public ExplorationOutcome getExplorationOutcome() {
+    public Map<MarsRover, ExplorationOutcome> getExplorationOutcome() {
         return explorationOutcome;
     }
 
-    public void setExplorationOutcome(ExplorationOutcome explorationOutcome) {
-        this.explorationOutcome = explorationOutcome;
+    public void setExplorationOutcome(MarsRover rover, ExplorationOutcome explorationOutcome) {
+        getExplorationOutcome().put(rover, explorationOutcome);
+        this.explorationOutcome = getExplorationOutcome();
     }
 
     public int getNumberOfSteps() {
@@ -60,14 +61,17 @@ public class SimulationContext {
         return map;
     }
 
-    public  HashMap<String, List<Coordinate>> getMonitoredResources() {
+    public  Map<MarsRover, HashMap<String, List<Coordinate>>> getMonitoredResources() {
         return monitoredResources;
     }
 
     public int getNumberOfResources(){
         int amountOfResources = 0;
-        for (List<Coordinate> resourceList : monitoredResources.values()) {
-            amountOfResources += resourceList.size();
+        for (Map.Entry<MarsRover, HashMap<String, List<Coordinate>>> entry : monitoredResources.entrySet()) {
+            HashMap<String, List<Coordinate>> resourcesMap = entry.getValue();
+            for (List<Coordinate> resourceList : resourcesMap.values()) {
+                amountOfResources += resourceList.size();
+            }
         }
         return amountOfResources;
     }
@@ -80,7 +84,7 @@ public class SimulationContext {
         this.map = map;
     }
 
-    public void setMonitoredResources(HashMap<String, List<Coordinate>> monitoredResources) {
-        this.monitoredResources = monitoredResources;
+    public void setMonitoredResources(MarsRover rover, HashMap<String, List<Coordinate>> monitoredResources) {
+        this.monitoredResources.put(rover, monitoredResources);
     }
 }

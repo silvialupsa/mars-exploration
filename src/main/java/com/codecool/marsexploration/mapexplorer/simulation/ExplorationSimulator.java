@@ -36,6 +36,7 @@ public class ExplorationSimulator {
         Random random = new Random();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
+
                 List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
                 if (!adjacentCoordinate.isEmpty()) {
                     Coordinate roverPosition = rover.getCurrentPosition();
@@ -47,11 +48,15 @@ public class ExplorationSimulator {
                     }
                     rover.setCurrentPosition(newRandomRoverPosition);
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
-
+                    if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
+                        rover.setResources(findResources(configuration, rover.getCurrentPosition()));
+                    }
+                    isOutcomeReached(rover, simulationContext, configuration);
+                    fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                 }
+
             }
-//            isOutcomeReached(simulationContext, configuration);
-//            System.out.println("outcome " + simulationContext.getExplorationOutcome() + " rover " + simulationContext.getRover().get(indexOfRover).getNamed());
+
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
         }
         configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
@@ -82,9 +87,9 @@ public class ExplorationSimulator {
         return resourcesMap;
     }
 
-    private boolean isOutcomeReached(SimulationContext context, Configuration configuration) {
+    private boolean isOutcomeReached(MarsRover rover, SimulationContext context, Configuration configuration) {
         return analyzers.stream()
-                .anyMatch(analyzer -> analyzer.hasReachedOutcome(context, configuration));
+                .anyMatch(analyzer -> analyzer.hasReachedOutcome(rover, context, configuration));
     }
 
 }
