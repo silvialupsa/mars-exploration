@@ -24,7 +24,6 @@ public class MarsRover {
     }
 
     public void setResources(HashMap<String, List<Coordinate>> resources) {
-        this.resources.clear();
         this.resources.putAll(resources);
     }
 

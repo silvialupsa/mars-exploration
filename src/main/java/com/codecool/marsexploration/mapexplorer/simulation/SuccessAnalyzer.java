@@ -8,16 +8,16 @@ public class SuccessAnalyzer implements OutcomeAnalyzer {
     @Override
     public boolean hasReachedOutcome(MarsRover rover, SimulationContext context, Configuration configuration) {
         context.setExplorationOutcome(rover, ExplorationOutcome.COLONIZABLE);
-        int sizeOfMineral = context.getMonitoredResources().get("%") != null ? context.getMonitoredResources().get("%").size() : 0;
-        int sizeOfWater = context.getMonitoredResources().get("*") != null ? context.getMonitoredResources().get("*").size() : 0;
+        int sizeOfMineral = rover.getResources().get("%") != null ? rover.getResources().get("%").size() : 0;
+        int sizeOfWater = rover.getResources().get("*") != null ? rover.getResources().get("*").size() : 0;
         boolean checkIfWeHaveOneMountainAndOnePit = false;
-        if (context.getMonitoredResources().containsKey("#") && context.getMonitoredResources().containsKey("&")) {
-            checkIfWeHaveOneMountainAndOnePit = (context.getMonitoredResources().get("#").size() >= 1 && context.getMonitoredResources().get("&").size() >= 1);
+        if (rover.getResources().containsKey("#") && rover.getResources().containsKey("&")) {
+            checkIfWeHaveOneMountainAndOnePit = (rover.getResources().get("#").size() >= 1 && rover.getResources().get("&").size() >= 1);
         }
-        boolean checkIfWeHaveMinimOneResourceFromEach = context.getMonitoredResources().containsKey("&")
-                && context.getMonitoredResources().containsKey("#")
-                && context.getMonitoredResources().containsKey("%")
-                && context.getMonitoredResources().containsKey("*");
+        boolean checkIfWeHaveMinimOneResourceFromEach = rover.getResources().containsKey("&")
+                && rover.getResources().containsKey("#")
+                && rover.getResources().containsKey("%")
+                && rover.getResources().containsKey("*");
 
         boolean checkIfTheSizeOfMineralIsBiggerThan4AndTheSizeOfWaterIsBiggerThan3 = (sizeOfMineral > 4 && sizeOfWater > 3);
 

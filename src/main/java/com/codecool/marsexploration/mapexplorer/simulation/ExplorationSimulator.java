@@ -36,6 +36,7 @@ public class ExplorationSimulator {
         Random random = new Random();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
+
                 List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
                 if (!adjacentCoordinate.isEmpty()) {
                     Coordinate roverPosition = rover.getCurrentPosition();
@@ -47,13 +48,11 @@ public class ExplorationSimulator {
                     }
                     rover.setCurrentPosition(newRandomRoverPosition);
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
-                    System.out.println(simulationContext.getExplorationOutcome().get(rover));
                     if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
                         rover.setResources(findResources(configuration, rover.getCurrentPosition()));
-//                        simulationContext.getMonitoredResources().putAll(findResources(configuration, rover.getCurrentPosition()));
                     }
                     isOutcomeReached(rover, simulationContext, configuration);
-                    System.out.println("outcome " + simulationContext.getExplorationOutcome() + " rover " + rover.getName());
+                    fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                 }
 
             }

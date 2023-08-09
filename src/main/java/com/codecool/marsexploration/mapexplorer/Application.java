@@ -37,7 +37,9 @@ public class Application {
         resourcesDatabase.deleteAll();
         for (int i = 0; i < 3; i++) {
             String mapFile = workDir + "/resources/exploration-" + i + ".map";
-            HashMap<String, List<Coordinate>> resources = new HashMap<>();
+            HashMap<String, List<Coordinate>> resourcesRover1 = new HashMap<>();
+            HashMap<String, List<Coordinate>> resourcesRover2 = new HashMap<>();
+            HashMap<String, List<Coordinate>> resourcesRover3 = new HashMap<>();
             Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources = new HashMap<>();
             Random random = new Random();
             int x = random.nextInt(32);
@@ -47,9 +49,9 @@ public class Application {
             Configuration mapConfiguration = new Configuration(mapFile, landingSpot, List.of("#", "&", "*", "%"), 30);
             if (configurationValidator.checkLandingSpots(landingSpot, mapConfiguration)) {
                 InitializeRover initializeRover = new InitializeRover();
-                MarsRover rover1 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
-                MarsRover rover2 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
-                MarsRover rover3 = initializeRover.initializeRover(landingSpot, 2, resources, mapConfiguration);
+                MarsRover rover1 = initializeRover.initializeRover(landingSpot, 2, resourcesRover1, mapConfiguration);
+                MarsRover rover2 = initializeRover.initializeRover(landingSpot, 2, resourcesRover2, mapConfiguration);
+                MarsRover rover3 = initializeRover.initializeRover(landingSpot, 2, resourcesRover3, mapConfiguration);
 
                 List<MarsRover> rovers = List.of(rover1, rover2, rover3);
 
