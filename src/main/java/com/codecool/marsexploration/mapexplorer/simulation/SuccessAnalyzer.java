@@ -9,7 +9,10 @@ public class SuccessAnalyzer implements OutcomeAnalyzer {
         context.setExplorationOutcome(ExplorationOutcome.COLONIZABLE);
         int sizeOfMineral = context.getMonitoredResources().get("%") != null ? context.getMonitoredResources().get("%").size() : 0;
         int sizeOfWater = context.getMonitoredResources().get("*") != null ? context.getMonitoredResources().get("*").size() : 0;
-        boolean checkIfWeHaveOneMountainAndOnePit= (!context.getMonitoredResources().get("#").isEmpty() && !context.getMonitoredResources().get("&").isEmpty());
+        boolean checkIfWeHaveOneMountainAndOnePit = false;
+        if (context.getMonitoredResources().containsKey("#") && context.getMonitoredResources().containsKey("&")) {
+            checkIfWeHaveOneMountainAndOnePit = (context.getMonitoredResources().get("#").size() >= 1 && context.getMonitoredResources().get("&").size() >= 1);
+        }
         boolean checkIfWeHaveMinimOneResourceFromEach = context.getMonitoredResources().containsKey("&")
                 && context.getMonitoredResources().containsKey("#")
                 && context.getMonitoredResources().containsKey("%")

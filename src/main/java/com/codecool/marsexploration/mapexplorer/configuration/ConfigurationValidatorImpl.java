@@ -3,9 +3,11 @@ package com.codecool.marsexploration.mapexplorer.configuration;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
+import com.codecool.marsexploration.mapexplorer.rovers.model.MarsRover;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigurationValidatorImpl implements ConfigurationValidator {
 
@@ -58,15 +60,31 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
     }
 
     @Override
-    public void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, List<Coordinate> coordinates) {
+    public void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate) {
         char[][] mapArrayChar = getMap2D(mapConfiguration);
         String [][] mapArray = convertChar2DToString2D(mapArrayChar);
-        for (Coordinate coordinate : coordinates) {
-            mapArray[coordinate.X()][coordinate.Y()] = "\uD83D\uDE97";
+
+        for (Map.Entry<MarsRover, List<Coordinate>> roverListEntry : visitedCoordinate.entrySet()) {
+            MarsRover rover = roverListEntry.getKey();
+            List<Coordinate> coordinates = roverListEntry.getValue();
+            String roverSymbol = "@";
+            if(rover.getName().equals("rover-0")){
+                roverSymbol = "\uD83D\uDE97";  // Symbol for the rover
+            } else if(rover.getName().equals("rover-1")){
+                roverSymbol = "\uD83D\uDE94";
+            } else if(rover.getName().equals("rover-2")){
+                roverSymbol = "\uD83D\uDE9B";
+            }
+
+            for (Coordinate coordinate : coordinates) {
+                mapArray[coordinate.X()][coordinate.Y()] = roverSymbol;
+            }
         }
+
         mapArray[spaceshipLocation.X()][spaceshipLocation.Y()] =  "\uD83D\uDE80";
         for(int i=0; i<mapArray.length; i++){
             for(int j=0; j<mapArray[i].length; j++){
+
                 switch (mapArray[i][j]) {
                     case "#" -> mapArray[i][j] = "\uD83D\uDDFB";
                     case "&" -> mapArray[i][j] = "\uD83D\uDEB5";
@@ -118,4 +136,6 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
 
         return stringArray;
     }
+
+
 }
