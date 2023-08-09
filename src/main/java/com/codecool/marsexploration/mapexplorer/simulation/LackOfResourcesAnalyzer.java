@@ -11,8 +11,8 @@ public class LackOfResourcesAnalyzer implements OutcomeAnalyzer {
     private static final double EXPLORED_PERCENTAGE_THRESHOLD = 0.10; // Adjust this threshold as needed
 
     @Override
-    public boolean hasReachedOutcome(SimulationContext context, Configuration configuration) {
-        context.setExplorationOutcome(ExplorationOutcome.ERROR);
+    public boolean hasReachedOutcome(MarsRover rover,SimulationContext context, Configuration configuration) {
+        context.setExplorationOutcome(rover, ExplorationOutcome.ERROR);
         return isAlmostExplored(context, configuration) && noRightConditionsForColonization(context);
     }
 

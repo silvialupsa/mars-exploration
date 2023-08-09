@@ -18,10 +18,7 @@ import com.codecool.marsexploration.mapexplorer.simulation.SimulationContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Application {
     private static final String workDir = "src/main";
@@ -41,6 +38,7 @@ public class Application {
         for (int i = 0; i < 3; i++) {
             String mapFile = workDir + "/resources/exploration-" + i + ".map";
             HashMap<String, List<Coordinate>> resources = new HashMap<>();
+            Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources = new HashMap<>();
             Random random = new Random();
             int x = random.nextInt(32);
             int y = random.nextInt(32);
@@ -56,7 +54,7 @@ public class Application {
                 List<MarsRover> rovers = List.of(rover1, rover2, rover3);
 
 
-                SimulationContext simulationContext = new SimulationContext(0, 60, rovers, landingSpot, mapFile, resources);
+                SimulationContext simulationContext = new SimulationContext(0, 60, rovers, landingSpot, mapFile, monitoredResources);
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
