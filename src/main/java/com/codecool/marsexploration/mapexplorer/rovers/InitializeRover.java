@@ -16,7 +16,7 @@ public class InitializeRover {
     public MarsRover initializeRover(Coordinate coordinate, int sight, HashMap<String, List<Coordinate>> resources, Configuration configuration) {
         List<Coordinate> emptySpots = configurationValidator.checkAdjacentCoordinate(coordinate, configuration);
         Random randomPosition = new Random();
-        if (emptySpots.size() > 0) {
+        if (!emptySpots.isEmpty()) {
             Coordinate randomCoordinate = emptySpots.get(randomPosition.nextInt(emptySpots.size()));
             return new MarsRover(randomCoordinate, sight, resources);
         }

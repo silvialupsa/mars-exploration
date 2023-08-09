@@ -15,10 +15,44 @@ public class MarsRover {
 
     private static int counter = 0;
 
+    public int getSight() {
+        return sight;
+    }
+
+    public HashMap<String, List<Coordinate>> getResources() {
+        return resources;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static int getCounter() {
+        return counter;
+    }
+
+    public static void setCounter(int counter) {
+        MarsRover.counter = counter;
+    }
+
     public MarsRover(Coordinate currentPosition, int sight, HashMap<String, List<Coordinate>> resources) {
         this.id = counter;
         counter++;
-
+        if(counter == 3){
+            counter = 0;
+        }
         this.name = "rover-" + id;
         this.currentPosition = currentPosition;
         this.sight = sight;
