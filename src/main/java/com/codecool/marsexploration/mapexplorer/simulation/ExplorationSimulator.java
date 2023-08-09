@@ -31,48 +31,14 @@ public class ExplorationSimulator {
 
     public void startExploring() {
         fileLogger.clearLogFile();
+
         for (MarsRover rover : simulationContext.getRover()) {
-            System.out.println(" outcome " + simulationContext.getExplorationOutcome());
-            simulationContext.setExplorationOutcome(ExplorationOutcome.SEARCHING);
-            List<Coordinate> visitedCoordonate = new ArrayList<>();
-            simulationContext.setNumberOfSteps(0);
-            simulationContext.setMonitoredResources(new HashMap<>());
-            Random random = new Random();
-//            System.out.println("afara");
-//            System.out.println("steps " + simulationContext.getNumberOfSteps());
-//            boolean bool1 = simulationContext.getNumberOfSteps() < simulationContext.getTimeoutSteps();
-//            boolean bool2 = simulationContext.getExplorationOutcome() != ExplorationOutcome.COLONIZABLE;
-//            boolean bool3 = !isOutcomeReached(simulationContext, configuration);
-//            System.out.println(" 1 + " + bool1);
-//            System.out.println("2  " + bool2);
-//            System.out.println("3 " + bool3);
-            while (simulationContext.getNumberOfSteps() < simulationContext.getTimeoutSteps() && simulationContext.getExplorationOutcome() != ExplorationOutcome.COLONIZABLE
-                    && !isOutcomeReached(simulationContext, configuration)) {
-                System.out.printf("interior");
-                List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
-                if (!adjacentCoordinate.isEmpty()) {
-
-                    Coordinate roverPosition = rover.getCurrentPosition();
-                    Coordinate newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
-                    visitedCoordonate.add(roverPosition);
-                    if (!new HashSet<>(visitedCoordonate).containsAll(adjacentCoordinate) && !new HashSet<>(adjacentCoordinate).containsAll(visitedCoordonate)) {
-                        while (visitedCoordonate.contains(newRandomRoverPosition)) {
-                            newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
-                        }
-                    }
-                    rover.setCurrentPosition(newRandomRoverPosition);
-                    simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
-
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
-                    if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
-                        simulationContext.getMonitoredResources().putAll(findResources(configuration, rover.getCurrentPosition()));
-                    }
-                }
+            setInitializeData();
+            List<Coordinate> visitedCoordinate = new ArrayList<>();
+            while (checkIfWeHaveNumberOfStepsAndOutcomeIsNotColonizable()) {
+                explore(rover, visitedCoordinate);
             }
-            fileLogger.logInfo("EVENT outcome; OUTCOME " + simulationContext.getExplorationOutcome());
-            configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordonate);
-            rover.setCurrentPosition(simulationContext.getSpaceshipLocation());
-
+            setFinalData(visitedCoordinate, rover);
         }
     }
 
@@ -111,4 +77,49 @@ public class ExplorationSimulator {
         return false;
     }
 
+    private boolean checkIfWeHaveNumberOfStepsAndOutcomeIsNotColonizable(){
+       return simulationContext.getNumberOfSteps() < simulationContext.getTimeoutSteps() && simulationContext.getExplorationOutcome() != ExplorationOutcome.COLONIZABLE
+                && !isOutcomeReached(simulationContext, configuration);
+    }
+
+    private void setInitializeData(){
+        System.out.println(" outcome " + simulationContext.getExplorationOutcome());
+        simulationContext.setExplorationOutcome(ExplorationOutcome.SEARCHING);
+        simulationContext.setNumberOfSteps(0);
+        simulationContext.setMonitoredResources(new HashMap<>());
+    }
+
+    private void explore(MarsRover rover, List<Coordinate> visitedCoordinate){
+        Random random = new Random();
+        List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
+        if (!adjacentCoordinate.isEmpty()) {
+            Coordinate roverPosition = rover.getCurrentPosition();
+            Coordinate newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
+            visitedCoordinate.add(roverPosition);
+
+            newRandomRoverPosition = setNewRandomRoverPosition(visitedCoordinate, adjacentCoordinate, newRandomRoverPosition, random);
+
+            rover.setCurrentPosition(newRandomRoverPosition);
+            simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
+            fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
+            if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
+                simulationContext.getMonitoredResources().putAll(findResources(configuration, rover.getCurrentPosition()));
+            }
+        }
+    }
+
+    public Coordinate setNewRandomRoverPosition(List<Coordinate> visitedCoordinate, List<Coordinate> adjacentCoordinate, Coordinate newRandomRoverPosition, Random random){
+        if (!new HashSet<>(visitedCoordinate).containsAll(adjacentCoordinate) && !new HashSet<>(adjacentCoordinate).containsAll(visitedCoordinate)) {
+            while (visitedCoordinate.contains(newRandomRoverPosition)) {
+                newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
+            }
+        }
+        return  newRandomRoverPosition;
+    }
+
+    public void setFinalData(List<Coordinate> visitedCoordinate, MarsRover rover){
+        fileLogger.logInfo("EVENT outcome; OUTCOME " + simulationContext.getExplorationOutcome());
+        configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
+        rover.setCurrentPosition(simulationContext.getSpaceshipLocation());
+    }
 }
