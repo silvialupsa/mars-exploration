@@ -68,13 +68,7 @@ public class ExplorationSimulator {
     }
 
     private boolean isOutcomeReached(SimulationContext context, Configuration configuration) {
-        for (OutcomeAnalyzer analyzer : analyzers) {
-            if (analyzer.hasReachedOutcome(context, configuration)) {
-                return true;
-                //todo replace with stream and reduce between analyzers
-            }
-        }
-        return false;
+        return analyzers.stream().anyMatch(analyzer -> analyzer.hasReachedOutcome(context, configuration));
     }
 
     private boolean checkIfWeHaveNumberOfStepsAndOutcomeIsNotColonizable(){

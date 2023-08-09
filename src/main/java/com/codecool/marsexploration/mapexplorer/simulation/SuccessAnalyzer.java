@@ -7,22 +7,19 @@ public class SuccessAnalyzer implements OutcomeAnalyzer {
     @Override
     public boolean hasReachedOutcome(SimulationContext context, Configuration configuration) {
         context.setExplorationOutcome(ExplorationOutcome.COLONIZABLE);
-        boolean checked = false;
-        if (context.getMonitoredResources().containsKey("#") && context.getMonitoredResources().containsKey("&")) {
-            checked = (context.getMonitoredResources().get("#").size() >= 1 && context.getMonitoredResources().get("&").size() >= 1);
-        }
-
         int sizeOfMineral = context.getMonitoredResources().get("%") != null ? context.getMonitoredResources().get("%").size() : 0;
         int sizeOfWater = context.getMonitoredResources().get("*") != null ? context.getMonitoredResources().get("*").size() : 0;
-
-        context.setExplorationOutcome(ExplorationOutcome.COLONIZABLE);
-        return (context.getMonitoredResources().containsKey("&")
+        boolean checkIfWeHaveOneMountainAndOnePit= (!context.getMonitoredResources().get("#").isEmpty() && !context.getMonitoredResources().get("&").isEmpty());
+        boolean checkIfWeHaveMinimOneResourceFromEach = context.getMonitoredResources().containsKey("&")
                 && context.getMonitoredResources().containsKey("#")
                 && context.getMonitoredResources().containsKey("%")
-                && context.getMonitoredResources().containsKey("*"))
-                || (sizeOfMineral > 4
-                && sizeOfWater > 3)
-                || checked;
+                && context.getMonitoredResources().containsKey("*");
+
+        boolean checkIfTheSizeOfMineralIsBiggerThan4AndTheSizeOfWaterIsBiggerThan3 = (sizeOfMineral > 4 && sizeOfWater > 3);
+
+        context.setExplorationOutcome(ExplorationOutcome.COLONIZABLE);
+        return (checkIfWeHaveOneMountainAndOnePit
+                || checkIfWeHaveMinimOneResourceFromEach
+                || checkIfTheSizeOfMineralIsBiggerThan4AndTheSizeOfWaterIsBiggerThan3);
     }
-    //todo return with 3 booleans
 }
