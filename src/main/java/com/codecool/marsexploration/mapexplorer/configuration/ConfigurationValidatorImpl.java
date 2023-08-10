@@ -69,11 +69,11 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
             MarsRover rover = roverListEntry.getKey();
             List<Coordinate> coordinates = roverListEntry.getValue();
             String roverSymbol = "@";
-            if(rover.getName().equals("rover-0")){
+            if(rover.getName().equals("rover-0") || rover.getName().equals("rover-3") || rover.getName().equals("rover-6")){
                 roverSymbol = "\uD83D\uDE97";  // Symbol for the rover
-            } else if(rover.getName().equals("rover-1")){
+            } else if(rover.getName().equals("rover-1") || rover.getName().equals("rover-4") || rover.getName().equals("rover-7")){
                 roverSymbol = "\uD83D\uDE94";
-            } else if(rover.getName().equals("rover-2")){
+            } else if(rover.getName().equals("rover-2") || rover.getName().equals("rover-5") || rover.getName().equals("rover-8")){
                 roverSymbol = "\uD83D\uDE9B";
             }
 
@@ -86,7 +86,6 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
         mapArray[spaceshipLocation.X()][spaceshipLocation.Y()] =  "\uD83D\uDE80";
         for(int i=0; i<mapArray.length; i++){
             for(int j=0; j<mapArray[i].length; j++){
-
                 switch (mapArray[i][j]) {
                     case "#" -> mapArray[i][j] = "\uD83D\uDDFB";
                     case "&" -> mapArray[i][j] = "\uD83D\uDEB5";
@@ -96,11 +95,20 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
             }
         }
 
+        int processedRoverCount = 0;
+        int totalRovers = commandCenterMap.size();
+
         for (Map.Entry<MarsRover, CommandCenter> commandCenterEntry : commandCenterMap.entrySet()) {
-            MarsRover rover = commandCenterEntry.getKey();
-            CommandCenter commandCenter = commandCenterMap.get(rover);
+            if (processedRoverCount < totalRovers - 3) {
+                processedRoverCount++;
+                continue;
+            }
+
+            CommandCenter commandCenter = commandCenterEntry.getValue();
             String commandCenterSymbol = "\uD83C\uDFC6";
             mapArray[commandCenter.getLocation().X()][commandCenter.getLocation().Y()] = commandCenterSymbol;
+
+            processedRoverCount++;
         }
 
         for (String[] strings : mapArray) {

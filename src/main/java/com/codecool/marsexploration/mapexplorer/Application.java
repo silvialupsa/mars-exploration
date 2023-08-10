@@ -36,6 +36,7 @@ public class Application {
             HashMap<String, List<Coordinate>> resourcesRover1 = new HashMap<>();
             HashMap<String, List<Coordinate>> resourcesRover2 = new HashMap<>();
             HashMap<String, List<Coordinate>> resourcesRover3 = new HashMap<>();
+
             Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources = new HashMap<>();
             Random random = new Random();
             int x = random.nextInt(32);
@@ -62,6 +63,9 @@ public class Application {
 //                }
                 consoleLogger.logInfo("File ResultsAfterExploration-" + i + ".map successful created.");
             } else {
+                FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
+                fileLogger.clearLogFile();
+                fileLogger.logError("Invalid landing Spot for spaceship-" + i);
                 consoleLogger.logError("Invalid landing Spot for spaceship-" + i);
             }
             System.out.println();
