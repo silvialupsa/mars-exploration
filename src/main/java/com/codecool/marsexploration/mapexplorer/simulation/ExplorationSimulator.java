@@ -35,35 +35,38 @@ public class ExplorationSimulator {
         Random random = new Random();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
-                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE){
+                if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE) {
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
-
                     continue;
                 }
-                List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
-                if (!adjacentCoordinate.isEmpty()) {
-                    Coordinate roverPosition = rover.getCurrentPosition();
-                    Coordinate newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
-                    if (!visitedCoordinate.containsKey(rover)) {
-                        visitedCoordinate.put(rover, new ArrayList<>(Collections.singleton(roverPosition)));
-                    } else {
-                        visitedCoordinate.get(rover).add(roverPosition);
-                    }
-                    rover.setCurrentPosition(newRandomRoverPosition);
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
-                    if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
-                        rover.setResources(findResources(configuration, rover.getCurrentPosition()));
-                    }
-                    isOutcomeReached(rover, simulationContext, configuration);
-                    fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
-                }
-
+                roverTravelSteps( rover, visitedCoordinate);
             }
 
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
         }
         configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
+    }
+
+    private void roverTravelSteps(MarsRover rover, Map<MarsRover, List<Coordinate>> visitedCoordinate) {
+        List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
+        Random random = new Random();
+        if (!adjacentCoordinate.isEmpty()) {
+            Coordinate roverPosition = rover.getCurrentPosition();
+            Coordinate newRandomRoverPosition = adjacentCoordinate.get(random.nextInt(adjacentCoordinate.size()));
+            if (!visitedCoordinate.containsKey(rover)) {
+                visitedCoordinate.put(rover, new ArrayList<>(Collections.singleton(roverPosition)));
+            } else {
+                visitedCoordinate.get(rover).add(roverPosition);
+            }
+            rover.setCurrentPosition(newRandomRoverPosition);
+            fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
+            if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
+                rover.setResources(findResources(configuration, rover.getCurrentPosition()));
+            }
+            isOutcomeReached(rover, simulationContext, configuration);
+            fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+        }
     }
 
     public HashMap<String, List<Coordinate>> findResources(Configuration configuration, Coordinate currentRoverPosition) {
