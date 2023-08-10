@@ -8,18 +8,16 @@ import com.codecool.marsexploration.mapexplorer.database.ResourcesImpl;
 import com.codecool.marsexploration.mapexplorer.logger.ConsoleLogger;
 import com.codecool.marsexploration.mapexplorer.logger.FileLogger;
 import com.codecool.marsexploration.mapexplorer.logger.Logger;
-import com.codecool.marsexploration.mapexplorer.maploader.MapLoader;
-import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.rovers.InitializeRover;
 import com.codecool.marsexploration.mapexplorer.rovers.model.MarsRover;
 import com.codecool.marsexploration.mapexplorer.simulation.ExplorationSimulator;
 import com.codecool.marsexploration.mapexplorer.simulation.SimulationContext;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class Application {
     private static final String workDir = "src/main";
@@ -57,10 +55,6 @@ public class Application {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
-//                for (MarsRover rover : rovers) {
-           //         resourcesDatabase.add(rovers.getNamed(), simulationContext.getNumberOfSteps(), simulationContext.getNumberOfResources(), simulationContext.getExplorationOutcome().toString());
-
-//                }
                 consoleLogger.logInfo("File ResultsAfterExploration-" + i + ".map successful created.");
             } else {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
@@ -73,7 +67,7 @@ public class Application {
 
     }
 
-    private static void displayLegend(Logger consoleLogger){
+    private static void displayLegend(Logger consoleLogger) {
         consoleLogger.logInfo("Legend:");
         consoleLogger.logInfo("Rover-\uD83D\uDE97");
         consoleLogger.logInfo("Spaceship-\uD83D\uDE80");

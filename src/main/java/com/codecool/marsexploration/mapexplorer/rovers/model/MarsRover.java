@@ -54,9 +54,6 @@ public class MarsRover {
     public MarsRover(Coordinate currentPosition, int sight, HashMap<String, List<Coordinate>> resources) {
         this.id = counter;
         counter++;
-//        if(counter == 3){
-//            counter = 0;
-//        }
         this.name = "rover-" + id;
         this.currentPosition = currentPosition;
         this.sight = sight;

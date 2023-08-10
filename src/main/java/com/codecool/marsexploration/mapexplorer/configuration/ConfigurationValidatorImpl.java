@@ -63,17 +63,17 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
     @Override
     public void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate, Map<MarsRover, CommandCenter> commandCenterMap) {
         char[][] mapArrayChar = getMap2D(mapConfiguration);
-        String [][] mapArray = convertChar2DToString2D(mapArrayChar);
+        String[][] mapArray = convertChar2DToString2D(mapArrayChar);
 
         for (Map.Entry<MarsRover, List<Coordinate>> roverListEntry : visitedCoordinate.entrySet()) {
             MarsRover rover = roverListEntry.getKey();
             List<Coordinate> coordinates = roverListEntry.getValue();
             String roverSymbol = "@";
-            if(rover.getName().equals("rover-0") || rover.getName().equals("rover-3") || rover.getName().equals("rover-6")){
+            if (rover.getName().equals("rover-0") || rover.getName().equals("rover-3") || rover.getName().equals("rover-6")) {
                 roverSymbol = "\uD83D\uDE97";  // Symbol for the rover
-            } else if(rover.getName().equals("rover-1") || rover.getName().equals("rover-4") || rover.getName().equals("rover-7")){
+            } else if (rover.getName().equals("rover-1") || rover.getName().equals("rover-4") || rover.getName().equals("rover-7")) {
                 roverSymbol = "\uD83D\uDE94";
-            } else if(rover.getName().equals("rover-2") || rover.getName().equals("rover-5") || rover.getName().equals("rover-8")){
+            } else if (rover.getName().equals("rover-2") || rover.getName().equals("rover-5") || rover.getName().equals("rover-8")) {
                 roverSymbol = "\uD83D\uDE9B";
             }
 
@@ -83,9 +83,9 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
         }
 
 
-        mapArray[spaceshipLocation.X()][spaceshipLocation.Y()] =  "\uD83D\uDE80";
-        for(int i=0; i<mapArray.length; i++){
-            for(int j=0; j<mapArray[i].length; j++){
+        mapArray[spaceshipLocation.X()][spaceshipLocation.Y()] = "\uD83D\uDE80";
+        for (int i = 0; i < mapArray.length; i++) {
+            for (int j = 0; j < mapArray[i].length; j++) {
                 switch (mapArray[i][j]) {
                     case "#" -> mapArray[i][j] = "\uD83D\uDDFB";
                     case "&" -> mapArray[i][j] = "\uD83D\uDEB5";
@@ -118,7 +118,8 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
             System.out.println();
         }
     }
-//todo utils with all private methods
+
+    //todo utils with all private methods
     public String convertConfigurationIntoMap(Configuration mapConfiguration) {
         List<String> mapLoader = new MapLoaderImpl().readAllLines(mapConfiguration.map());
         return String.join("", mapLoader);

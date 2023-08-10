@@ -34,65 +34,44 @@ public class ExplorationSimulator {
 
         fileLogger.clearLogFile();
         Map<MarsRover, List<Coordinate>> visitedCoordinate = new HashMap<>();
-        Map<String, List<Coordinate>> commandCenterResources= new HashMap<>();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
                 if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE) {
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT " + simulationContext.getExplorationOutcome().get(rover) + "; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                     simulationContext.setExplorationOutcome(rover, ExplorationOutcome.CONSTRUCTION);
-                    System.out.println("inainte de a lasa resursele in rover" + rover.getResources());
                     simulationContext.setCommandCenterMap(rover, new CommandCenterImpl(rover.getId(), rover.getCurrentPosition(), 0, rover.getResources()));
-                    commandCenterResources = rover.getResources();
-//                    simulationContext.getCommandCenterMap().get(rover).setResourcesOnStock(rover.getResources());
                     rover.setResources(new HashMap<>());
-
-                    System.out.println("--------------------------");
-                    System.out.println("dupa ce am lasat resursele in command center" + simulationContext.getCommandCenterMap().get(rover).getResourcesOnStock());
-                    System.out.println("dupa ce am lasat resursele in rover" + rover.getResources());
                     continue;
                 }
-                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.CONSTRUCTION){
-                    if(simulationContext.getCommandCenterMap().get(rover).getStatus() >= 10){
+                if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.CONSTRUCTION) {
+                    if (simulationContext.getCommandCenterMap().get(rover).getStatus() >= 10) {
                         simulationContext.setExplorationOutcome(rover, ExplorationOutcome.EXTRACTIONS);
                         continue;
                     }
                     simulationContext.getCommandCenterMap().get(rover).incrementStatus();
                     simulationContext.getCommandCenterMap().get(rover).setResourcesOnStock(rover.getResources());
                     int status = simulationContext.getCommandCenterMap().get(rover).getStatus();
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "STATUS " +status + "/10 " + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "STATUS " + status + "/10 " + "; EVENT " + simulationContext.getExplorationOutcome().get(rover) + "; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                     continue;
                 }
-                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.EXTRACTIONS){
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.EXTRACTIONS) {
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT " + simulationContext.getExplorationOutcome().get(rover) + "; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
-
                 }
-                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.DONE_EXTRACTION){
-
-
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps()  + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.DONE_EXTRACTION) {
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT " + simulationContext.getExplorationOutcome().get(rover) + "; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                     rover.setCurrentPosition(simulationContext.getCommandCenterMap().get(rover).getLocation());
                     simulationContext.setExplorationOutcome(rover, ExplorationOutcome.EXTRACTIONS);
-
-                    System.out.println("inainte de a lasa resursele in command center" + simulationContext.getCommandCenterMap().get(rover).getResourcesOnStock());
-                    System.out.println("inainte de a lasa resursele in rover" + rover.getResources());
                     simulationContext.getCommandCenterMap().get(rover).setResourcesOnStock(rover.getResources());
                     rover.setResources(new HashMap<>());
-                    System.out.println("dupa ce am lasat resursele in command center" + simulationContext.getCommandCenterMap().get(rover).getResourcesOnStock());
-                    System.out.println("dupa ce am lasat resursele in rover" + rover.getResources());
                     continue;
                 }
-                roverTravelSteps( rover, visitedCoordinate);
-               // System.out.println("______________________________________________");
-              //  System.out.println("dupa ce am lasat resursele in command center" + simulationContext.getCommandCenterMap().get(rover).getResourcesOnStock());
-             //   System.out.println("______________________________________________");
+                roverTravelSteps(rover, visitedCoordinate);
             }
-
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
-            fileLogger.logInfo("----------------------------------------");
         }
         configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate, simulationContext.getCommandCenterMap());
 
@@ -114,18 +93,18 @@ public class ExplorationSimulator {
                 rover.setResources(findResources(configuration, rover.getCurrentPosition()));
             }
 
-            if(simulationContext.getExplorationOutcome().get(rover) != ExplorationOutcome.EXTRACTIONS) {
+            if (simulationContext.getExplorationOutcome().get(rover) != ExplorationOutcome.EXTRACTIONS) {
                 fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
                 fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                 isOutcomeReached(rover, simulationContext, configuration);
             } else {
-                if(rover.getResources().size() >=3){
+                if (rover.getResources().size() >= 3) {
                     simulationContext.setExplorationOutcome(rover, ExplorationOutcome.DONE_EXTRACTION);
                 }
                 fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT extraction; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
                 fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
             }
-            }
+        }
     }
 
     public HashMap<String, List<Coordinate>> findResources(Configuration configuration, Coordinate currentRoverPosition) {
