@@ -3,6 +3,7 @@ package com.codecool.marsexploration.mapexplorer;
 import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidatorImpl;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
+import com.codecool.marsexploration.mapexplorer.database.DatabaseManager;
 import com.codecool.marsexploration.mapexplorer.database.Resources;
 import com.codecool.marsexploration.mapexplorer.database.ResourcesImpl;
 import com.codecool.marsexploration.mapexplorer.logger.ConsoleLogger;
@@ -26,8 +27,13 @@ public class Application {
         Logger consoleLogger = new ConsoleLogger();
         displayLegend(consoleLogger);
         String dbFile = "src/main/resources/ResourcesMars.db";
-        Resources resourcesDatabase = new ResourcesImpl(dbFile, consoleLogger);
-        resourcesDatabase.deleteAll();
+//        Resources resourcesDatabase = new ResourcesImpl(dbFile, consoleLogger);
+//        resourcesDatabase.deleteAll();
+        DatabaseManager databaseManager = new DatabaseManager(dbFile,consoleLogger);
+
+        databaseManager.deleteAllRovers();
+        databaseManager.deleteAllCommandCenters();
+        databaseManager.deleteAllConstructions();
         Map<MarsRover, CommandCenter> commandCenterMap = new HashMap<>();
         for (int i = 0; i < 3; i++) {
             String mapFile = workDir + "/resources/exploration-" + i + ".map";
@@ -55,6 +61,7 @@ public class Application {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
+                databaseManager.addRover(rover1.getName(),simulationContext.getNumberOfSteps(), simulationContext.getMonitoredResources().toString(),simulationContext.getExplorationOutcome().toString());
                 consoleLogger.logInfo("File ResultsAfterExploration-" + i + ".map successful created.");
             } else {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
