@@ -61,7 +61,7 @@ public class Application {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
-                databaseManager.addRover(rover1.getName(),simulationContext.getNumberOfSteps(), simulationContext.getMonitoredResources().toString(),simulationContext.getExplorationOutcome().toString());
+//                databaseManager.addRover(rover1.getName(),simulationContext.getNumberOfSteps(), simulationContext.getMonitoredResources().toString(),simulationContext.getExplorationOutcome().toString());
                 consoleLogger.logInfo("File ResultsAfterExploration-" + i + ".map successful created.");
             } else {
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");

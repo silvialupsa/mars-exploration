@@ -28,24 +28,31 @@ public class DatabaseManager {
     }
 
     private void createTables() {
-        // Code to create necessary tables if they don't exist
-        // You should define the CREATE TABLE statements for each table
-        // For example, for Rovers table:
-        String createRoversTable = "CREATE TABLE IF NOT EXISTS Rovers (" +
+        String roversTableSQL = "CREATE TABLE IF NOT EXISTS Rovers (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name TEXT," +
-                "steps INTEGER," +
-                "resources TEXT," +
-                "outcome TEXT)";
-        // Execute the SQL statement to create the table
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(createRoversTable);
-        } catch (SQLException e) {
-            logger.logError(e.getMessage());
-        }
+                "name TEXT NOT NULL," +
+                "extractedResources INTEGER NOT NULL)";
 
-        // You can similarly define CREATE TABLE statements for CommandCenters and Constructions tables
+        String commandCentersTableSQL = "CREATE TABLE IF NOT EXISTS CommandCenters (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT NOT NULL," +
+                "deliveredResources INTEGER NOT NULL," +
+                "currentStock INTEGER NOT NULL)";
+
+        String constructionsTableSQL = "CREATE TABLE IF NOT EXISTS Constructions (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT NOT NULL," +
+                "resourcesUsed TEXT NOT NULL," +
+                "responsibleUnit TEXT NOT NULL," +
+                "step INTEGER NOT NULL)";
+
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.execute(roversTableSQL);
+            stmt.execute(commandCentersTableSQL);
+            stmt.execute(constructionsTableSQL);
+        } catch (SQLException e) {
+            logger.logError("Error creating tables: " + e.getMessage());
+        }
     }
 
     public void addRover(String name, int steps, String resources, String outcome) {
@@ -78,14 +85,14 @@ public class DatabaseManager {
         }
     }
 
-    public void addResourceDelivery(String centerId, int resource1Count, int resource2Count) {
+    public void addResourceDelivery(Integer centerId, int resource1Count, int resource2Count) {
         String sql = "UPDATE CommandCenters SET delivered_resource_1 = delivered_resource_1 + ?, delivered_resource_2 = delivered_resource_2 + ? WHERE id = ?";
         try (Connection conn = getConnection()) {
             assert conn != null;
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, resource1Count);
                 pstmt.setInt(2, resource2Count);
-                pstmt.setString(3, centerId);
+                pstmt.setInt(3, centerId);
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -93,14 +100,14 @@ public class DatabaseManager {
         }
     }
 
-    public void updateCommandCenterStock(String centerId, int resource1Stock, int resource2Stock) {
+    public void updateCommandCenterStock(Integer centerId, int resource1Stock, int resource2Stock) {
         String sql = "UPDATE CommandCenters SET stock_resource_1 = ?, stock_resource_2 = ? WHERE id = ?";
         try (Connection conn = getConnection()) {
             assert conn != null;
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, resource1Stock);
                 pstmt.setInt(2, resource2Stock);
-                pstmt.setString(3, centerId);
+                pstmt.setInt(3, centerId);
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -108,15 +115,15 @@ public class DatabaseManager {
         }
     }
 
-    public void addConstructionEvent(String initiatorId, String initiatorType, int resource1Used, int resource2Used, int step) {
-        String sql = "INSERT INTO Constructions (initiator_id, initiator_type, resource_used_1, resource_used_2, step) VALUES(?,?,?,?,?)";
+    public void addConstructionEvent(Integer id, String name, int resourcesUsed, String responsibleUnit, int step) {
+        String sql = "INSERT INTO Constructions (id, name, resourcesUsed, responsibleUnit, step) VALUES(?,?,?,?,?)";
         try (Connection conn = getConnection()) {
             assert conn != null;
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, initiatorId);
-                pstmt.setString(2, initiatorType);
-                pstmt.setInt(3, resource1Used);
-                pstmt.setInt(4, resource2Used);
+                pstmt.setInt(1, id);
+                pstmt.setString(2, name);
+                pstmt.setInt(3, resourcesUsed);
+                pstmt.setString(4, responsibleUnit); // Set responsibleUnit here
                 pstmt.setInt(5, step);
                 pstmt.executeUpdate();
             }
@@ -124,6 +131,7 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
+
 
     public void deleteAllRovers() {
         String sql = "DELETE FROM Rovers";
