@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface CommandCenter {
+    Coordinate getLocation();
+
     int getStatus();
 
     void setStatus(int status);

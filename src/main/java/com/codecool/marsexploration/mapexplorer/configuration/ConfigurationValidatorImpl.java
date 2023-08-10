@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.configuration;
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
 import com.codecool.marsexploration.mapexplorer.maploader.MapLoaderImpl;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
@@ -60,7 +61,7 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
     }
 
     @Override
-    public void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate) {
+    public void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate, Map<MarsRover, CommandCenter> commandCenterMap) {
         char[][] mapArrayChar = getMap2D(mapConfiguration);
         String [][] mapArray = convertChar2DToString2D(mapArrayChar);
 
@@ -81,6 +82,7 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
             }
         }
 
+
         mapArray[spaceshipLocation.X()][spaceshipLocation.Y()] =  "\uD83D\uDE80";
         for(int i=0; i<mapArray.length; i++){
             for(int j=0; j<mapArray[i].length; j++){
@@ -92,6 +94,13 @@ public class ConfigurationValidatorImpl implements ConfigurationValidator {
                     case "*" -> mapArray[i][j] = "\uD83D\uDCA7";
                 }
             }
+        }
+
+        for (Map.Entry<MarsRover, CommandCenter> commandCenterEntry : commandCenterMap.entrySet()) {
+            MarsRover rover = commandCenterEntry.getKey();
+            CommandCenter commandCenter = commandCenterMap.get(rover);
+            String commandCenterSymbol = "\uD83C\uDFC6";
+            mapArray[commandCenter.getLocation().X()][commandCenter.getLocation().Y()] = commandCenterSymbol;
         }
 
         for (String[] strings : mapArray) {

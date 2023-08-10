@@ -31,10 +31,12 @@ public class ExplorationSimulator {
     }
 
     public void startExploring() {
+
         fileLogger.clearLogFile();
         Map<MarsRover, List<Coordinate>> visitedCoordinate = new HashMap<>();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
+//                simulationContext.setCommandCenterMap(rover, new CommandCenterImpl());
                 if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE) {
                     simulationContext.setExplorationOutcome(rover, ExplorationOutcome.CONSTRUCTION);
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
@@ -62,7 +64,6 @@ public class ExplorationSimulator {
                     fileLogger.logInfo("am inceput extractia");
                     simulationContext.getCommandCenterMap().get(rover).setResourcesOnStock(rover.getResources());
                     rover.setResources(new HashMap<>());
-
                 }
                 roverTravelSteps( rover, visitedCoordinate);
             }
@@ -70,7 +71,7 @@ public class ExplorationSimulator {
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
             fileLogger.logInfo("----------------------------------------");
         }
-        configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
+        configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate, simulationContext.getCommandCenterMap());
     }
 
     private void roverTravelSteps(MarsRover rover, Map<MarsRover, List<Coordinate>> visitedCoordinate) {

@@ -25,7 +25,7 @@ public class CommandCenterImpl implements CommandCenter {
     public void setId(int id) {
         this.id = id;
     }
-
+    @Override
     public Coordinate getLocation() {
         return location;
     }

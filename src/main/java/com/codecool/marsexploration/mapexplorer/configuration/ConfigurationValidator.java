@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.configuration;
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.rovers.model.MarsRover;
@@ -16,5 +17,5 @@ public interface ConfigurationValidator {
 
     boolean checkLandingSpots(Coordinate coordinate, Configuration configuration);
 
-     void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate);
+     void roverMap(Coordinate spaceshipLocation, Configuration mapConfiguration, Map<MarsRover, List<Coordinate>> visitedCoordinate,  Map<MarsRover, CommandCenter> commandCenterMap);
 }
