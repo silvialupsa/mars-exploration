@@ -36,7 +36,11 @@ public class ExplorationSimulator {
         Random random = new Random();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
-
+                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE){
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                    fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+                    continue;
+                }
                 List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
                 if (!adjacentCoordinate.isEmpty()) {
                     Coordinate roverPosition = rover.getCurrentPosition();
