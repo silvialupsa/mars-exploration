@@ -4,5 +4,6 @@ public enum ExplorationOutcome {
     ERROR,
     TIMEOUT,
     COLONIZABLE,
-    SEARCHING
+    CONSTRUCTION,
+    EXTRACTIONS
 }

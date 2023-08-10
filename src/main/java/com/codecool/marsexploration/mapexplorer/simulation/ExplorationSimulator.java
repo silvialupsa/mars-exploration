@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.simulation;
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenterImpl;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidator;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationOutcome;
@@ -32,18 +33,42 @@ public class ExplorationSimulator {
     public void startExploring() {
         fileLogger.clearLogFile();
         Map<MarsRover, List<Coordinate>> visitedCoordinate = new HashMap<>();
-        Random random = new Random();
         for (int i = 0; i < simulationContext.getTimeoutSteps(); i++) {
             for (MarsRover rover : simulationContext.getRover()) {
                 if (simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE) {
-                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                    simulationContext.setExplorationOutcome(rover, ExplorationOutcome.CONSTRUCTION);
+                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+                    simulationContext.setCommandCenterMap(rover, new CommandCenterImpl(rover.getId(), rover.getCurrentPosition(), 0, rover.getResources()));
+
+
+//                    fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT construction; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
+//                    fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+
+                    continue;
+                }
+                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.CONSTRUCTION){
+                    if(simulationContext.getCommandCenterMap().get(rover).getStatus() >= 10){
+                        simulationContext.setExplorationOutcome(rover, ExplorationOutcome.EXTRACTIONS);
+                        fileLogger.logInfo("am terminat constructia");
+                        continue;
+                    }
+                    simulationContext.getCommandCenterMap().get(rover).incrementStatus();
+                    int status = simulationContext.getCommandCenterMap().get(rover).getStatus();
+                    fileLogger.logInfo("STATUS " +status + "/10 " + "STEP " + simulationContext.getNumberOfSteps() + "; EVENT "+ simulationContext.getExplorationOutcome().get(rover)+"; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
                     continue;
+                }
+                if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.EXTRACTIONS){
+                    fileLogger.logInfo("am inceput extractia");
+                    simulationContext.getCommandCenterMap().get(rover).setResourcesOnStock(rover.getResources());
+                    rover.setResources(new HashMap<>());
+
                 }
                 roverTravelSteps( rover, visitedCoordinate);
             }
 
             simulationContext.setNumberOfSteps(simulationContext.getNumberOfSteps() + 1);
+            fileLogger.logInfo("----------------------------------------");
         }
         configurationValidator.roverMap(simulationContext.getSpaceshipLocation(), configuration, visitedCoordinate);
     }
@@ -60,13 +85,18 @@ public class ExplorationSimulator {
                 visitedCoordinate.get(rover).add(roverPosition);
             }
             rover.setCurrentPosition(newRandomRoverPosition);
-            fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
             if (configurationValidator.checkAdjacentCoordinate(roverPosition, configuration).size() < 8) {
                 rover.setResources(findResources(configuration, rover.getCurrentPosition()));
             }
-            isOutcomeReached(rover, simulationContext, configuration);
-            fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
-        }
+            if(simulationContext.getExplorationOutcome().get(rover) != ExplorationOutcome.EXTRACTIONS) {
+                fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
+                fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+                isOutcomeReached(rover, simulationContext, configuration);
+            } else {
+                fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT extraction; UNIT " + rover.getNamed() + "; POSITION [" + roverPosition.X() + "," + roverPosition.Y() + "]");
+                fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+            }
+            }
     }
 
     public HashMap<String, List<Coordinate>> findResources(Configuration configuration, Coordinate currentRoverPosition) {

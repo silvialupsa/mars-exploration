@@ -52,7 +52,7 @@ public class Application {
                 List<MarsRover> rovers = List.of(rover1, rover2, rover3);
 
 
-                SimulationContext simulationContext = new SimulationContext(0, 60, rovers, landingSpot, mapFile, monitoredResources, commandCenterMap);
+                SimulationContext simulationContext = new SimulationContext(0, 200, rovers, landingSpot, mapFile, monitoredResources, commandCenterMap);
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();

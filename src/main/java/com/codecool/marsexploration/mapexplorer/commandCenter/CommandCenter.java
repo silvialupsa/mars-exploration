@@ -1,5 +1,18 @@
 package com.codecool.marsexploration.mapexplorer.commandCenter;
 
-public interface CommandCenter {
+import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 
+import java.util.HashMap;
+import java.util.List;
+
+public interface CommandCenter {
+    int getStatus();
+
+    void setStatus(int status);
+
+    HashMap<String, List<Coordinate>> getResourcesOnStock();
+
+    void setResourcesOnStock(HashMap<String, List<Coordinate>> resourcesOnStock);
+
+    void incrementStatus();
 }
