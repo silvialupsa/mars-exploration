@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer.simulation;
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.exploration.ExplorationOutcome;
 import com.codecool.marsexploration.mapexplorer.maploader.model.Coordinate;
 import com.codecool.marsexploration.mapexplorer.rovers.model.MarsRover;
@@ -17,20 +18,33 @@ public class SimulationContext {
     private Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources;
     private Map<MarsRover, ExplorationOutcome> explorationOutcome = new HashMap<>();
 
+    private Map<MarsRover, CommandCenter> commandCenterMap;
+
+
 
     // Constructor
     public SimulationContext(int numberOfSteps, int timeoutSteps, List<MarsRover> rovers,
                              Coordinate spaceshipLocation, String map,
-                             Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources) {
+                             Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources,
+                             Map<MarsRover, CommandCenter> commandCenterMap) {
         this.numberOfSteps = numberOfSteps;
         this.timeoutSteps = timeoutSteps;
         this.rovers = rovers;
         this.spaceshipLocation = spaceshipLocation;
         this.map = map;
         this.monitoredResources = monitoredResources;
+        this.commandCenterMap = commandCenterMap;
     }
 
     // Getters and Setters (You can generate them automatically in most IDEs)
+    public Map<MarsRover, CommandCenter> getCommandCenterMap() {
+        return commandCenterMap;
+    }
+
+    public void setCommandCenterMap(MarsRover rover, CommandCenter commandCenter) {
+        getCommandCenterMap().put(rover, commandCenter);
+        this.commandCenterMap = getCommandCenterMap();
+    }
 
     public Map<MarsRover, ExplorationOutcome> getExplorationOutcome() {
         return explorationOutcome;

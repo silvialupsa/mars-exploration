@@ -1,5 +1,6 @@
 package com.codecool.marsexploration.mapexplorer;
 
+import com.codecool.marsexploration.mapexplorer.commandCenter.CommandCenter;
 import com.codecool.marsexploration.mapexplorer.configuration.ConfigurationValidatorImpl;
 import com.codecool.marsexploration.mapexplorer.configuration.model.Configuration;
 import com.codecool.marsexploration.mapexplorer.database.Resources;
@@ -25,16 +26,11 @@ public class Application {
 
     public static void main(String[] args) {
         Logger consoleLogger = new ConsoleLogger();
-        consoleLogger.logInfo("Legend:");
-        consoleLogger.logInfo("Rover-\uD83D\uDE97");
-        consoleLogger.logInfo("Spaceship-\uD83D\uDE80");
-        consoleLogger.logInfo("Mountain-\uD83D\uDDFB");
-        consoleLogger.logInfo("Pit-\uD83D\uDEB5");
-        consoleLogger.logInfo("Mineral-\uD83D\uDD36");
-        consoleLogger.logInfo("Water-\uD83D\uDCA7");
+        displayLegend(consoleLogger);
         String dbFile = "src/main/resources/ResourcesMars.db";
         Resources resourcesDatabase = new ResourcesImpl(dbFile, consoleLogger);
         resourcesDatabase.deleteAll();
+        Map<MarsRover, CommandCenter> commandCenterMap = new HashMap<>();
         for (int i = 0; i < 3; i++) {
             String mapFile = workDir + "/resources/exploration-" + i + ".map";
             HashMap<String, List<Coordinate>> resourcesRover1 = new HashMap<>();
@@ -56,7 +52,7 @@ public class Application {
                 List<MarsRover> rovers = List.of(rover1, rover2, rover3);
 
 
-                SimulationContext simulationContext = new SimulationContext(0, 60, rovers, landingSpot, mapFile, monitoredResources);
+                SimulationContext simulationContext = new SimulationContext(0, 200, rovers, landingSpot, mapFile, monitoredResources, commandCenterMap);
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
                 ExplorationSimulator explorationSimulator = new ExplorationSimulator(fileLogger, simulationContext, configurationValidator, mapConfiguration);
                 explorationSimulator.startExploring();
@@ -73,6 +69,15 @@ public class Application {
 
     }
 
+    private static void displayLegend(Logger consoleLogger){
+        consoleLogger.logInfo("Legend:");
+        consoleLogger.logInfo("Rover-\uD83D\uDE97");
+        consoleLogger.logInfo("Spaceship-\uD83D\uDE80");
+        consoleLogger.logInfo("Mountain-\uD83D\uDDFB");
+        consoleLogger.logInfo("Pit-\uD83D\uDEB5");
+        consoleLogger.logInfo("Mineral-\uD83D\uDD36");
+        consoleLogger.logInfo("Water-\uD83D\uDCA7");
+    }
 
 }
 
