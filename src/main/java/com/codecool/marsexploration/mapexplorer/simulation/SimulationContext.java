@@ -20,9 +20,6 @@ public class SimulationContext {
 
     private Map<MarsRover, CommandCenter> commandCenterMap;
 
-
-
-    // Constructor
     public SimulationContext(int numberOfSteps, int timeoutSteps, List<MarsRover> rovers,
                              Coordinate spaceshipLocation, String map,
                              Map<MarsRover, HashMap<String, List<Coordinate>>> monitoredResources,
@@ -36,7 +33,6 @@ public class SimulationContext {
         this.commandCenterMap = commandCenterMap;
     }
 
-    // Getters and Setters (You can generate them automatically in most IDEs)
     public Map<MarsRover, CommandCenter> getCommandCenterMap() {
         return commandCenterMap;
     }
@@ -63,7 +59,7 @@ public class SimulationContext {
         return timeoutSteps;
     }
 
-    public List <MarsRover> getRover() {
+    public List<MarsRover> getRover() {
         return rovers;
     }
 
@@ -75,11 +71,11 @@ public class SimulationContext {
         return map;
     }
 
-    public  Map<MarsRover, HashMap<String, List<Coordinate>>> getMonitoredResources() {
+    public Map<MarsRover, HashMap<String, List<Coordinate>>> getMonitoredResources() {
         return monitoredResources;
     }
 
-    public int getNumberOfResources(){
+    public int getNumberOfResources() {
         int amountOfResources = 0;
         for (Map.Entry<MarsRover, HashMap<String, List<Coordinate>>> entry : monitoredResources.entrySet()) {
             HashMap<String, List<Coordinate>> resourcesMap = entry.getValue();

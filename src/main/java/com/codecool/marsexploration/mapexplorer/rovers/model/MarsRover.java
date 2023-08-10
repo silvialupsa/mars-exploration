@@ -8,7 +8,7 @@ import java.util.List;
 public class MarsRover {
     private Coordinate currentPosition;
     private final int sight;
-    private final HashMap<String, List<Coordinate>> resources;
+    private HashMap<String, List<Coordinate>> resources;
 
     private int id;
     private String name;
@@ -24,7 +24,7 @@ public class MarsRover {
     }
 
     public void setResources(HashMap<String, List<Coordinate>> resources) {
-        this.resources.putAll(resources);
+        this.resources = resources;
     }
 
     public int getId() {
@@ -54,9 +54,6 @@ public class MarsRover {
     public MarsRover(Coordinate currentPosition, int sight, HashMap<String, List<Coordinate>> resources) {
         this.id = counter;
         counter++;
-        if(counter == 3){
-            counter = 0;
-        }
         this.name = "rover-" + id;
         this.currentPosition = currentPosition;
         this.sight = sight;

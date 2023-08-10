@@ -26,6 +26,7 @@ public class CommandCenterImpl implements CommandCenter {
         this.id = id;
     }
 
+    @Override
     public Coordinate getLocation() {
         return location;
     }
@@ -49,9 +50,15 @@ public class CommandCenterImpl implements CommandCenter {
         return resourcesOnStock;
     }
 
+
     @Override
     public void setResourcesOnStock(HashMap<String, List<Coordinate>> resourcesOnStock) {
-        this.resourcesOnStock.putAll(resourcesOnStock);
+
+        for (String key : resourcesOnStock.keySet()) {
+            if (this.resourcesOnStock.containsKey(key)) {
+                this.resourcesOnStock.get(key).addAll(resourcesOnStock.get(key));
+            }
+        }
     }
 
     @Override

@@ -5,5 +5,6 @@ public enum ExplorationOutcome {
     TIMEOUT,
     COLONIZABLE,
     CONSTRUCTION,
-    EXTRACTIONS
+    EXTRACTIONS,
+    DONE_EXTRACTION
 }
