@@ -25,13 +25,7 @@ public class Application {
 
     public static void main(String[] args) {
         Logger consoleLogger = new ConsoleLogger();
-        consoleLogger.logInfo("Legend:");
-        consoleLogger.logInfo("Rover-\uD83D\uDE97");
-        consoleLogger.logInfo("Spaceship-\uD83D\uDE80");
-        consoleLogger.logInfo("Mountain-\uD83D\uDDFB");
-        consoleLogger.logInfo("Pit-\uD83D\uDEB5");
-        consoleLogger.logInfo("Mineral-\uD83D\uDD36");
-        consoleLogger.logInfo("Water-\uD83D\uDCA7");
+        displayLegend(consoleLogger);
         String dbFile = "src/main/resources/ResourcesMars.db";
         Resources resourcesDatabase = new ResourcesImpl(dbFile, consoleLogger);
         resourcesDatabase.deleteAll();
@@ -73,6 +67,15 @@ public class Application {
 
     }
 
+    private static void displayLegend(Logger consoleLogger){
+        consoleLogger.logInfo("Legend:");
+        consoleLogger.logInfo("Rover-\uD83D\uDE97");
+        consoleLogger.logInfo("Spaceship-\uD83D\uDE80");
+        consoleLogger.logInfo("Mountain-\uD83D\uDDFB");
+        consoleLogger.logInfo("Pit-\uD83D\uDEB5");
+        consoleLogger.logInfo("Mineral-\uD83D\uDD36");
+        consoleLogger.logInfo("Water-\uD83D\uDCA7");
+    }
 
 }
 

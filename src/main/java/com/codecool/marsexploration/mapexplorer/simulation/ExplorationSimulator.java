@@ -30,7 +30,6 @@ public class ExplorationSimulator {
     }
 
     public void startExploring() {
-
         fileLogger.clearLogFile();
         Map<MarsRover, List<Coordinate>> visitedCoordinate = new HashMap<>();
         Random random = new Random();
@@ -39,6 +38,7 @@ public class ExplorationSimulator {
                 if(simulationContext.getExplorationOutcome().get(rover) == ExplorationOutcome.COLONIZABLE){
                     fileLogger.logInfo("STEP " + simulationContext.getNumberOfSteps() + "; EVENT searching; UNIT " + rover.getNamed() + "; POSITION [" + rover.getCurrentPosition().X() + "," + rover.getCurrentPosition().Y() + "]");
                     fileLogger.logInfo("OUTCOME " + simulationContext.getExplorationOutcome().get(rover) + " for " + rover.getName());
+
                     continue;
                 }
                 List<Coordinate> adjacentCoordinate = configurationValidator.checkAdjacentCoordinate(rover.getCurrentPosition(), configuration);
