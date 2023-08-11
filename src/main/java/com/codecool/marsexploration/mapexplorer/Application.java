@@ -55,7 +55,7 @@ public class Application {
                 MarsRover rover3 = initializeRover.initializeRover(landingSpot, 2, resourcesRover3, mapConfiguration);
 
                 List<MarsRover> rovers = List.of(rover1, rover2, rover3);
-
+//todo lista de rover
 
                 SimulationContext simulationContext = new SimulationContext(0, 200, rovers, landingSpot, mapFile, monitoredResources, commandCenterMap);
                 FileLogger fileLogger = new FileLogger(workDir + "/resources/ResultsAfterExploration-" + i + ".map");
