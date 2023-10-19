@@ -29,6 +29,6 @@ Maven.
 
 
 ## Code Contributors:
-#### Silvia Lupsa: https://github.com/silvialupsa,
+#### Sinziana Babu: https://github.com/sinzianaBab,
 #### Rares Butuc: https://github.com/RaresButuc,
 #### David Badarau: https://github.com/BadarauDavid.
